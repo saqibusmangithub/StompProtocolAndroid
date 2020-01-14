@@ -141,9 +141,10 @@ public class StompClient {
                 .filter(heartBeatTask::consumeHeartBeat)
                 .doOnNext(getMessageStream()::onNext)
                 .filter(msg -> msg.getStompCommand().equals(StompCommand.CONNECTED))
-                .subscribe(stompMessage -> {
-                    getConnectionStream().onNext(true);
-                });
+                .subscribe(
+                        stompMessage -> { getConnectionStream().onNext(true); },
+                        error -> Log.d("Error in parsing");
+                );
     }
 
     synchronized private BehaviorSubject<Boolean> getConnectionStream() {
